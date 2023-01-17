@@ -46,6 +46,19 @@ public class JwtService {
         return generateToken(new HashMap<>(),userDetails);
     }
 
+    public String generateRefreshToken(UserDetails userDetails){
+        return Jwts
+                .builder()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 *60 *24))
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+
+
+
     public String generateToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails
@@ -55,7 +68,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 *60 *24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 *60 *2))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
 
